@@ -1,0 +1,73 @@
+<!doctype html>
+{% load static %}
+<html>
+<head>
+<title>Home</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="" />
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+<!-- font files  -->
+<link href='https://fonts.googleapis.com/css?family=Muli:400,300' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'>
+<!-- /font files  -->
+<!-- css files -->
+<link href="{% static 'css/style.css' %}" rel='stylesheet' type='text/css' media="all" />
+<!-- /css files -->
+</head>
+<body>
+<h1>Login</h1>
+<div class="log">
+	<div class="content1">
+		<h2>Login</h2>
+		<form action="{% url 'login:regist' %}" method="post">
+            {% csrf_token %}
+			<input type="text" id="name" name="userid" value="USERNAME" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'USERNAME';}">
+			<input type="password" id="pwd" name="psw" value="PASSWORD" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'PASSWORD';}">
+			<div class="button-row">
+				<input type="button" class="sign-in" value="Sign In" onclick="check()"/>
+				<input type="submit" class="reset" value="Reset">
+				<div class="clear"></div>
+			</div>
+		</form>
+	</div>
+
+	<div class="clear"></div>
+</div>
+<div class="footer">
+	<p>Copyright &copy;  <a href="http://www.baizhiedu.com/" target="_blank" title="百知教育">百知教育</a></p>
+</div>
+
+</body>
+
+<script type="text/javascript">
+
+    function check() {
+        name=document.getElementById('name').value;
+        pwd=document.getElementById('pwd').value;
+        var xhr;
+        if (window.XMLHttpRequest){
+            xhr=new XMLHttpRequest()
+        }else if(window.ActiveXObject){
+            xhr=new ActiveXObject('Microsoft.XMLHTTP')
+        }
+        xhr.open("post","{% url 'login:login_logic' %}",true);
+        xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+        xhr.send("name="+name+"&pwd="+pwd+"&csrfmiddlewaretoken="+"{{ csrf_token }}");
+        xhr.onreadystatechange=function () {
+            if (xhr.readyState==4 && xhr.status==200){
+                if (xhr.responseText=='用户名或密码错误！'){
+                    alert(xhr.responseText);
+                }
+                else if(xhr.responseText=='成功'){
+                    location.href= "{% url 'login:login_ok'%}?name="+name+'&pwd='+pwd;
+                }
+            }
+        }
+
+    }
+
+</script>
+
+
+</html>
